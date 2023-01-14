@@ -4,6 +4,7 @@ pub enum TokenKind {
     RPAREN,
     ID,
     STRING,
+    SEMICOLON,
 }
 
 #[derive(Debug)]
