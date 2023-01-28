@@ -1,5 +1,6 @@
-use token::Token;
-mod token;
+use self::token::Token;
+
+pub mod token;
 
 #[derive(Debug)]
 pub struct Lexer {
@@ -44,7 +45,7 @@ impl Lexer {
                 self.advance();
             } else {
                 break;
-               }
+            }
         }
     }
 
@@ -81,7 +82,7 @@ impl Lexer {
             }
             c if c.is_ascii_alphanumeric() => self.collect_id_and_advance(),
             _ => panic!(
-                "Unexpected token `{}` at position {}",
+                "Unexpected character `{}` at position {}",
                 current_char, self.index
             ),
         }
