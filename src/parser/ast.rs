@@ -1,8 +1,23 @@
 #[derive(Debug)]
-pub struct AST {}
+pub enum AST<'a> {
+    VariableDeclaration(VariableDeclaration<'a>),
+    Compound(Compound<'a>),
+    FunctionCall(FunctionCall),
+}
 
-impl AST {
-    pub fn new() -> Self {
-        Self {}
-    }
+#[derive(Debug)]
+pub struct VariableDeclaration<'a> {
+    pub name: String,
+    pub value: &'a AST<'a>,
+}
+
+#[derive(Debug)]
+pub struct Compound<'a> {
+    pub list: Vec<AST<'a>>,
+}
+
+#[derive(Debug)]
+pub struct FunctionCall {
+    pub function_name: String,
+    pub arguments: Vec<String>,
 }

@@ -10,10 +10,12 @@ pub struct Lexer {
 
 impl Lexer {
     pub fn new(input: &str) -> Lexer {
-        Self {
+        let mut created = Self {
             index: 0,
             chars: input.chars().collect(),
-        }
+        };
+        created.skip_whitespace();
+        created
     }
 
     fn current_char(&self) -> &char {
@@ -24,19 +26,19 @@ impl Lexer {
         self.index += 1;
     }
 
-    fn done(&self) -> bool {
+    pub fn done(&self) -> bool {
         self.index >= self.chars.len()
     }
 
-    pub fn lex(&mut self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![];
-        self.skip_whitespace();
-        while !self.done() {
-            tokens.push(self.collect_token_and_advance());
-            self.skip_whitespace();
-        }
-        tokens
-    }
+    // pub fn lex(&mut self) -> Vec<Token> {
+    //     let mut tokens: Vec<Token> = vec![];
+    //     self.skip_whitespace();
+    //     while !self.done() {
+    //         tokens.push(self.collect_token_and_advance());
+    //         self.skip_whitespace();
+    //     }
+    //     tokens
+    // }
 
     fn skip_whitespace(&mut self) {
         while !self.done() {
@@ -49,23 +51,33 @@ impl Lexer {
         }
     }
 
+    pub fn get_next_token(&mut self) -> Option<Token> {
+        if !self.done() {
+            let token = Some(self.collect_token_and_advance());
+            self.skip_whitespace();
+            token
+        } else {
+            None
+        }
+    }
+
     fn collect_token_and_advance(&mut self) -> Token {
         let current_char = self.current_char();
         match current_char {
             '(' => {
                 let token = Token {
-                    kind: token::TokenKind::LPAREN,
+                    kind: token::TokenKind::LParenthesis,
                     position: self.index,
-                    content: None,
+                    content: current_char.to_string(),
                 };
                 self.advance();
                 token
             }
             ')' => {
                 let token = Token {
-                    kind: token::TokenKind::RPAREN,
+                    kind: token::TokenKind::RParenthesis,
                     position: self.index,
-                    content: None,
+                    content: current_char.to_string(),
                 };
                 self.advance();
                 token
@@ -73,9 +85,9 @@ impl Lexer {
             '\'' | '"' => self.collect_string_and_advance(),
             ';' => {
                 let token = Token {
-                    kind: token::TokenKind::SEMICOLON,
+                    kind: token::TokenKind::Semicolon,
                     position: self.index,
-                    content: None,
+                    content: current_char.to_string(),
                 };
                 self.advance();
                 token
@@ -99,7 +111,7 @@ impl Lexer {
         }
         return Token {
             kind: token::TokenKind::ID,
-            content: Some(name),
+            content: name,
             position: initial_index,
         };
     }
@@ -119,8 +131,8 @@ impl Lexer {
         }
         self.advance();
         return Token {
-            kind: token::TokenKind::STRING,
-            content: Some(string),
+            kind: token::TokenKind::String,
+            content: string,
             position: initial_index,
         };
     }
