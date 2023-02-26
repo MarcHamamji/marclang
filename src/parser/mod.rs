@@ -29,7 +29,6 @@ impl Parser {
     pub fn parse<'a>(&'a mut self) -> Compound {
         let mut compound = Compound { list: vec![] };
         while !self.done() {
-            println!("STARTED TO PARSE A STATEMENT");
             compound.list.push(self.parse_statement());
         }
         return compound;
@@ -92,8 +91,6 @@ impl Parser {
                 );
             }
         };
-        println!("current_token: {:#?}", self.current_token);
-        println!("next_tokens: {:#?}", self.next_tokens);
         self.eat(TokenKind::Semicolon);
         value
     }
