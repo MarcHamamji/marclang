@@ -1,12 +1,12 @@
 #[cfg(test)]
-mod hello_world {
+mod var_assignment {
     use marclang::lexer::Lexer;
     use marclang::parser::Parser;
 
     #[test]
     fn test() {
         let code = "
-print(\"Hello World!\");
+var a = \"Hello\";
 ";
         let lexer = Lexer::new(&code);
         let mut parser = Parser::new(lexer);
