@@ -1,10 +1,11 @@
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum TokenKind {
     LParenthesis,
     RParenthesis,
     ID,
     String,
     Semicolon,
+    Comma,
     Equals,
     KeywordVar
 }

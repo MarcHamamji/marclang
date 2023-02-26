@@ -1,10 +1,11 @@
+use super::expression::Expression;
+
 #[derive(Debug)]
 pub enum AST {
     VariableDeclaration(VariableDeclaration),
     Compound(Compound),
     FunctionCall(FunctionCall),
-    // TEMPORARY - TO REMOVE
-    String(String),
+    Expression(Expression)
 }
 
 #[derive(Debug)]
@@ -21,5 +22,5 @@ pub struct Compound {
 #[derive(Debug)]
 pub struct FunctionCall {
     pub function_name: String,
-    pub arguments: Vec<String>,
+    pub arguments: Vec<Expression>,
 }

@@ -32,6 +32,7 @@ impl Lexer {
 
     /// Only for debugging purposes
     pub fn get_tokens(&mut self) -> Vec<Token> {
+        #![allow(dead_code)]
         let mut tokens: Vec<Token> = vec![];
         self.skip_whitespace();
         while !self.done() {
@@ -93,6 +94,15 @@ impl Lexer {
                 token
             }
             '\'' | '"' => self.collect_string_and_advance(),
+            ',' => {
+                let token = Token {
+                    kind: token::TokenKind::Comma,
+                    position: self.index,
+                    content: current_char.to_string(),
+                };
+                self.advance();
+                token
+            }
             ';' => {
                 let token = Token {
                     kind: token::TokenKind::Semicolon,

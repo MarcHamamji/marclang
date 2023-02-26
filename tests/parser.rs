@@ -5,7 +5,8 @@ pub fn run(code: &str) {
     let lexer = Lexer::new(code);
     let mut parser = Parser::new(lexer);
 
-    let _ast = parser.parse();
+    let ast = parser.parse();
+    println!("{:#?}", ast);
 }
 
 #[cfg(test)]
@@ -39,6 +40,14 @@ var a = \"Hello\";
         run(&"
 var a = \"Hello\";
 print(a);
+")
+    }
+
+    #[test]
+    fn print_multiple_args() {
+        run(&"
+var a = \"World!\";
+print(\"Hello\", a);
 ")
     }
 }

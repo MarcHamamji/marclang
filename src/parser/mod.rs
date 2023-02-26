@@ -8,8 +8,11 @@ use self::ast::Compound;
 use self::ast::FunctionCall;
 use self::ast::VariableDeclaration;
 use self::ast::AST;
+use self::expression::Expression;
+use self::expression::ID;
 
 pub mod ast;
+pub mod expression;
 
 #[derive(Debug)]
 pub struct Parser {
@@ -32,7 +35,7 @@ impl Parser {
         while !self.done() {
             compound.list.push(self.parse_statement());
         }
-        return compound;
+        compound
     }
 
     fn done(&self) -> bool {
@@ -76,7 +79,7 @@ impl Parser {
 
     fn parse_statement<'a>(&mut self) -> AST {
         let value = match &self.current_token.kind {
-            TokenKind::ID => match self.peek_token(1).expect("Unexpected end of file").kind {
+            TokenKind::ID => match self.peek_token_strict(1).kind {
                 TokenKind::LParenthesis => AST::FunctionCall(self.parse_function_call()),
                 _ => {
                     panic!(
@@ -93,7 +96,7 @@ impl Parser {
                 AST::VariableDeclaration {
                     0: VariableDeclaration {
                         name,
-                        value: Box::new(AST::String(value)),
+                        value: Box::new(AST::Expression(expression::Expression::String(value))),
                     },
                 }
             }
@@ -108,6 +111,10 @@ impl Parser {
         value
     }
 
+    fn peek_token_strict(&mut self, offset: usize) -> &Token {
+        self.peek_token(offset).expect("Unexpected end of file")
+    }
+
     fn peek_token(&mut self, offset: usize) -> Option<&Token> {
         while self.next_tokens.len() < offset {
             self.next_tokens.push_back(self.lexer.get_next_token());
@@ -115,20 +122,42 @@ impl Parser {
         return self.next_tokens.back().expect("").as_ref();
     }
 
+    fn is_function_argument_type(token: &Token) -> bool {
+        [TokenKind::ID, TokenKind::String].contains(&token.kind)
+    }
+
     fn parse_function_call(&mut self) -> FunctionCall {
         let function_name_token = self.eat_strict(TokenKind::ID);
         let function_name = function_name_token.content;
         self.eat_strict(TokenKind::LParenthesis);
-        let mut arguments = vec![];
-        while self.current_token.is_kind(TokenKind::String) {
-            let current_token = self.eat_strict(TokenKind::String).content;
-            arguments.push(current_token);
+        let mut arguments: Vec<Expression> = vec![];
+        // while self.current_token.is_kind(TokenKind::String) {
+        //     let current_token = self.eat_strict(TokenKind::String).content;
+        //     arguments.push(current_token);
+        // }
+        while Parser::is_function_argument_type(&self.current_token) {
+            let current_token = self.eat_strict(self.current_token.kind.clone());
+            match current_token.kind {
+                TokenKind::String => {
+                    arguments.push(Expression::String(current_token.content));
+                }
+                TokenKind::ID => {
+                    arguments.push(Expression::ID(ID {
+                        name: current_token.content,
+                    }));
+                }
+                _ => unreachable!()
+            }
+
+            if !self.current_token.is_kind(TokenKind::RParenthesis) {
+                self.eat_strict(TokenKind::Comma);
+            }
         }
         self.eat_strict(TokenKind::RParenthesis);
-        let fcall = FunctionCall {
+        let function_call = FunctionCall {
             function_name,
             arguments,
         };
-        fcall
+        function_call
     }
 }
