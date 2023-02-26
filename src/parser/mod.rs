@@ -6,6 +6,7 @@ use crate::lexer::Lexer;
 
 use self::ast::Compound;
 use self::ast::FunctionCall;
+use self::ast::VariableDeclaration;
 use self::ast::AST;
 
 pub mod ast;
@@ -73,7 +74,7 @@ impl Parser {
         }
     }
 
-    fn parse_statement<'a>(&mut self) -> AST<'a> {
+    fn parse_statement<'a>(&mut self) -> AST {
         let value = match &self.current_token.kind {
             TokenKind::ID => match self.peek_token(1).expect("Unexpected end of file").kind {
                 TokenKind::LParenthesis => AST::FunctionCall(self.parse_function_call()),
@@ -84,6 +85,18 @@ impl Parser {
                     );
                 }
             },
+            TokenKind::KeywordVar => {
+                self.eat_strict(TokenKind::KeywordVar);
+                let name = self.eat_strict(TokenKind::ID).content;
+                self.eat_strict(TokenKind::Equals);
+                let value = self.eat_strict(TokenKind::String).content;
+                AST::VariableDeclaration {
+                    0: VariableDeclaration {
+                        name,
+                        value: Box::new(AST::String(value)),
+                    },
+                }
+            }
             _ => {
                 panic!(
                     "Unexpected token {} at position {}",

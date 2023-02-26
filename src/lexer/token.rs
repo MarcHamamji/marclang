@@ -5,6 +5,8 @@ pub enum TokenKind {
     ID,
     String,
     Semicolon,
+    Equals,
+    KeywordVar
 }
 
 #[derive(Debug)]

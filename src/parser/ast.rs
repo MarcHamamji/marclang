@@ -1,19 +1,21 @@
 #[derive(Debug)]
-pub enum AST<'a> {
-    VariableDeclaration(VariableDeclaration<'a>),
-    Compound(Compound<'a>),
+pub enum AST {
+    VariableDeclaration(VariableDeclaration),
+    Compound(Compound),
     FunctionCall(FunctionCall),
+    // TEMPORARY - TO REMOVE
+    String(String),
 }
 
 #[derive(Debug)]
-pub struct VariableDeclaration<'a> {
+pub struct VariableDeclaration {
     pub name: String,
-    pub value: &'a AST<'a>,
+    pub value: Box<AST>,
 }
 
 #[derive(Debug)]
-pub struct Compound<'a> {
-    pub list: Vec<AST<'a>>,
+pub struct Compound {
+    pub list: Vec<AST>,
 }
 
 #[derive(Debug)]

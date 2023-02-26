@@ -30,15 +30,16 @@ impl Lexer {
         self.index >= self.chars.len()
     }
 
-    // pub fn lex(&mut self) -> Vec<Token> {
-    //     let mut tokens: Vec<Token> = vec![];
-    //     self.skip_whitespace();
-    //     while !self.done() {
-    //         tokens.push(self.collect_token_and_advance());
-    //         self.skip_whitespace();
-    //     }
-    //     tokens
-    // }
+    /// Only for debugging purposes
+    pub fn get_tokens(&mut self) -> Vec<Token> {
+        let mut tokens: Vec<Token> = vec![];
+        self.skip_whitespace();
+        while !self.done() {
+            tokens.push(self.collect_token_and_advance());
+            self.skip_whitespace();
+        }
+        tokens
+    }
 
     fn skip_whitespace(&mut self) {
         while !self.done() {
@@ -64,6 +65,15 @@ impl Lexer {
     fn collect_token_and_advance(&mut self) -> Token {
         let current_char = self.current_char();
         match current_char {
+            '=' => {
+                let token = Token {
+                    kind: token::TokenKind::Equals,
+                    position: self.index,
+                    content: current_char.to_string(),
+                };
+                self.advance();
+                token
+            }
             '(' => {
                 let token = Token {
                     kind: token::TokenKind::LParenthesis,
@@ -92,7 +102,7 @@ impl Lexer {
                 self.advance();
                 token
             }
-            c if c.is_ascii_alphanumeric() => self.collect_id_and_advance(),
+            c if c.is_ascii_alphanumeric() => self.collect_alphanumeric(),
             _ => panic!(
                 "Unexpected character `{}` at position {}",
                 current_char, self.index
@@ -100,9 +110,21 @@ impl Lexer {
         }
     }
 
+    fn collect_alphanumeric(&mut self) -> Token {
+        let token = self.collect_id_and_advance();
+        if token.content == "var" {
+            return Token {
+                kind: token::TokenKind::KeywordVar,
+                position: token.position,
+                content: token.content,
+            }
+        }
+        token
+    }
+
     fn collect_id_and_advance(&mut self) -> Token {
         let initial_index = self.index;
-        let mut name = String::from("");
+        let mut name = String::new();
         let mut current_char = self.current_char();
         while current_char.is_ascii_alphanumeric() {
             name.push(*current_char);
@@ -118,7 +140,7 @@ impl Lexer {
 
     fn collect_string_and_advance(&mut self) -> Token {
         let initial_index = self.index;
-        let mut string = String::from("");
+        let mut string = String::new();
         let mut current_char = self.current_char();
         if token::is_quote(*current_char) {
             self.advance();
