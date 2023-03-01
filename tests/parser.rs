@@ -44,6 +44,13 @@ print(a);
     }
 
     #[test]
+    fn print_no_args() {
+        run(&"
+print();
+")
+    }
+
+    #[test]
     fn print_multiple_args() {
         run(&"
 var a = \"World!\";
