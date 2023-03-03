@@ -16,45 +16,45 @@ mod parser {
     #[test]
     fn hello_world() {
         run(&"
-print(\"Hello World!\");
-")
+            print(\"Hello World!\");
+        ")
     }
 
     #[test]
     fn hello_worlds() {
         run(&"
-print(\"Hello World!\");
-print(\"Hello World!\");
-")
+            print(\"Hello World!\");
+            print(\"Hello World!\");
+        ")
     }
 
     #[test]
     fn var_assignment() {
         run(&"
-var a = \"Hello\";
-")
+            var a = \"Hello\";
+        ")
     }
 
     #[test]
     fn print_var() {
         run(&"
-var a = \"Hello\";
-print(a);
-")
+            var a = \"Hello\";
+            print(a);
+        ")
     }
 
     #[test]
     fn print_no_args() {
         run(&"
-print();
-")
+            print();
+        ")
     }
 
     #[test]
     fn print_multiple_args() {
         run(&"
-var a = \"World!\";
-print(\"Hello\", a);
-")
+            var a = \"World!\";
+            print(\"Hello\", a);
+        ");
     }
 }
