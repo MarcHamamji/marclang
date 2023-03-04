@@ -15,14 +15,14 @@ mod parser {
 
     #[test]
     fn hello_world() {
-        run(&"
+        run("
             print(\"Hello World!\");
         ")
     }
 
     #[test]
     fn hello_worlds() {
-        run(&"
+        run("
             print(\"Hello World!\");
             print(\"Hello World!\");
         ")
@@ -30,14 +30,14 @@ mod parser {
 
     #[test]
     fn var_assignment() {
-        run(&"
+        run("
             var a = \"Hello\";
         ")
     }
 
     #[test]
     fn print_var() {
-        run(&"
+        run("
             var a = \"Hello\";
             print(a);
         ")
@@ -45,14 +45,14 @@ mod parser {
 
     #[test]
     fn print_no_args() {
-        run(&"
+        run("
             print();
         ")
     }
 
     #[test]
     fn print_multiple_args() {
-        run(&"
+        run("
             var a = \"World!\";
             print(\"Hello\", a);
         ");
