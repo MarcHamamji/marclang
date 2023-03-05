@@ -1,7 +1,7 @@
 use marclang::lexer::Lexer;
 use marclang::parser::Parser;
 
-pub fn run(code: &str) {
+pub fn parse(code: &str) {
     let lexer = Lexer::new(code);
     let mut parser = Parser::new(lexer);
 
@@ -11,18 +11,18 @@ pub fn run(code: &str) {
 
 #[cfg(test)]
 mod parser {
-    use crate::run;
+    use crate::parse;
 
     #[test]
     fn hello_world() {
-        run("
+        parse("
             print(\"Hello World!\");
         ")
     }
 
     #[test]
     fn hello_worlds() {
-        run("
+        parse("
             print(\"Hello World!\");
             print(\"Hello World!\");
         ")
@@ -30,14 +30,14 @@ mod parser {
 
     #[test]
     fn var_assignment() {
-        run("
+        parse("
             var a = \"Hello\";
         ")
     }
 
     #[test]
     fn print_var() {
-        run("
+        parse("
             var a = \"Hello\";
             print(a);
         ")
@@ -45,14 +45,14 @@ mod parser {
 
     #[test]
     fn print_no_args() {
-        run("
+        parse("
             print();
         ")
     }
 
     #[test]
     fn print_multiple_args() {
-        run("
+        parse("
             var a = \"World!\";
             print(\"Hello\", a);
         ");
