@@ -11,7 +11,7 @@ pub enum AST {
 #[derive(Debug)]
 pub struct VariableDeclaration {
     pub name: String,
-    pub value: Box<AST>,
+    pub value: Expression,
 }
 
 #[derive(Debug)]

@@ -96,7 +96,7 @@ impl Parser {
                 AST::VariableDeclaration {
                     0: VariableDeclaration {
                         name,
-                        value: Box::new(AST::Expression(expression::Expression::String(value))),
+                        value: expression::Expression::String(value),
                     },
                 }
             }

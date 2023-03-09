@@ -1,10 +1,16 @@
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Expression {
     String(String),
-    ID(ID)
+    ID(ID),
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct ID {
-    pub name: String
+    pub name: String,
+}
+
+#[derive(Debug, Clone)]
+pub enum ExpressionValue {
+    String(String),
+    Number(isize),
 }
