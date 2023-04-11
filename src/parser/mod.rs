@@ -146,7 +146,7 @@ impl Parser {
                         name: current_token.content,
                     }));
                 }
-                _ => unreachable!()
+                _ => unreachable!(),
             }
 
             if !self.current_token.is_kind(TokenKind::RParenthesis) {

@@ -11,13 +11,13 @@ use crate::parser::Parser;
 mod variable;
 
 #[derive(Debug)]
-pub struct Visitor<'a> {
+pub struct Visitor {
     parser: Parser,
     output: String,
-    scope: HashMap<&'a str, ExpressionValue>,
+    scope: HashMap<String, ExpressionValue>,
 }
 
-impl Visitor<'_> {
+impl Visitor {
     pub fn new(parser: Parser) -> Self {
         Self {
             parser,
@@ -33,7 +33,7 @@ impl Visitor<'_> {
     }
 
     fn run_compound(&mut self, compound: Compound) {
-        compound.list.iter().for_each(|line| match line {
+        compound.list.into_iter().for_each(|line| match line {
             AST::FunctionCall(function_call) => {
                 self.run_function(function_call);
             }
@@ -44,12 +44,12 @@ impl Visitor<'_> {
         })
     }
 
-    fn run_function(&mut self, function_call: &FunctionCall) -> Option<Expression> {
+    fn run_function(&mut self, function_call: FunctionCall) -> Option<Expression> {
         match function_call.function_name.as_str() {
             "print" => {
                 function_call
                     .arguments
-                    .iter()
+                    .into_iter()
                     .enumerate()
                     .for_each(|(index, expression)| {
                         if index != 0 {
@@ -57,9 +57,15 @@ impl Visitor<'_> {
                         }
                         match expression {
                             Expression::String(arg) => {
-                                self.output += arg;
+                                self.output += &arg;
                             }
-                            _ => unimplemented!(),
+                            Expression::ID(arg) => {
+                                if self.scope.get(&arg.name).is_none() {
+                                    panic!("Undefined variable '{}'", arg.name);
+                                }
+                                self.output += &self.scope.get(&arg.name).expect("").to_string();
+                                return;
+                            }
                         }
                     });
                 self.output += "\n";
@@ -69,24 +75,24 @@ impl Visitor<'_> {
         }
     }
 
-    fn declare_variable<'a>(&mut self, variable_declaration: &'a VariableDeclaration) {
+    fn declare_variable(&mut self, variable_declaration: VariableDeclaration) {
         self.scope.insert(
-            variable_declaration.name.as_str(),
-            self.evaluate_expression(&variable_declaration.value),
+            variable_declaration.name,
+            self.evaluate_expression(variable_declaration.value),
         );
     }
 
-    fn evaluate_expression(&self, expression: &Expression) -> ExpressionValue {
+    fn evaluate_expression(&self, expression: Expression) -> ExpressionValue {
         match expression {
-            Expression::String(string) => ExpressionValue::String(string.clone()),
-            Expression::ID(name) => self.read_variable(&name.name),
+            Expression::String(string) => ExpressionValue::String(string),
+            Expression::ID(name) => self.read_variable(name.name),
         }
     }
 
-    fn read_variable(&self, name: &String) -> ExpressionValue {
+    fn read_variable(&self, name: String) -> ExpressionValue {
         self.scope
-            .get(name.as_str())
+            .get(&name)
             .expect(format!("Unknown variable '{}'", name).as_str())
-            .clone()
+            .to_owned()
     }
 }

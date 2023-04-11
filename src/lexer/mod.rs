@@ -9,7 +9,7 @@ pub struct Lexer {
 }
 
 impl Lexer {
-    pub fn new(input: &str) -> Lexer {
+    pub fn new(input: String) -> Lexer {
         let mut created = Self {
             index: 0,
             chars: input.chars().collect(),
@@ -127,7 +127,7 @@ impl Lexer {
                 kind: token::TokenKind::KeywordVar,
                 position: token.position,
                 content: token.content,
-            }
+            };
         }
         token
     }

@@ -7,7 +7,7 @@ pub enum TokenKind {
     Semicolon,
     Comma,
     Equals,
-    KeywordVar
+    KeywordVar,
 }
 
 #[derive(Debug)]

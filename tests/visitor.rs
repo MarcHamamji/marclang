@@ -3,7 +3,7 @@ use marclang::parser::Parser;
 use marclang::visitor::Visitor;
 
 pub fn run(code: &str) -> String {
-    let lexer = Lexer::new(code);
+    let lexer = Lexer::new(code.to_string());
     let parser = Parser::new(lexer);
     let mut visitor = Visitor::new(parser);
 
@@ -64,7 +64,19 @@ mod visitor {
             var a = \"Hello\";
             print(a, \"World!\");
         "),
-            "Hello\n"
+            "Hello World!\n"
+        );
+    }
+
+    #[test]
+    fn print_var_and_var() {
+        assert_eq!(
+            run("
+            var a = \"Hello\";
+            var b = \"World!\";
+            print(a, b);
+        "),
+            "Hello World!\n"
         );
     }
 }

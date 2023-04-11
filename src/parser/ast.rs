@@ -5,7 +5,7 @@ pub enum AST {
     VariableDeclaration(VariableDeclaration),
     Compound(Compound),
     FunctionCall(FunctionCall),
-    Expression(Expression)
+    Expression(Expression),
 }
 
 #[derive(Debug)]
