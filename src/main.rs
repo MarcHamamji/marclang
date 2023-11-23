@@ -7,7 +7,6 @@ use marclang::visitor::Visitor;
 
 fn main() {
     let mut args: Vec<String> = env::args().collect();
-    println!("{:?}", args);
     args.remove(0);
     if args.len() != 1 {
         panic!("Invalid number of arguments. You should only provide the path to the file to run.");

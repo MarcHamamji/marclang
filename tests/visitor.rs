@@ -19,8 +19,8 @@ mod visitor {
     fn hello_world() {
         assert_eq!(
             run("
-            print(\"Hello World!\");
-        "),
+                print(\"Hello World!\");
+            "),
             "Hello World!\n"
         );
     }
@@ -29,8 +29,8 @@ mod visitor {
     fn hello_comma_world() {
         assert_eq!(
             run("
-            print(\"Hello\", \"World!\");
-        "),
+                print(\"Hello\", \"World!\");
+            "),
             "Hello World!\n"
         );
     }
@@ -39,9 +39,9 @@ mod visitor {
     fn hello_worlds() {
         assert_eq!(
             run("
-            print(\"Hello World!\");
-            print(\"Hello World!\");
-        "),
+                print(\"Hello World!\");
+                print(\"Hello World!\");
+            "),
             "Hello World!\nHello World!\n"
         );
     }
@@ -50,9 +50,9 @@ mod visitor {
     fn print_var() {
         assert_eq!(
             run("
-            var a = \"Hello\";
-            print(a);
-        "),
+                var a = \"Hello\";
+                print(a);
+            "),
             "Hello\n"
         );
     }
@@ -61,9 +61,9 @@ mod visitor {
     fn print_var_and_string() {
         assert_eq!(
             run("
-            var a = \"Hello\";
-            print(a, \"World!\");
-        "),
+                var a = \"Hello\";
+                print(a, \"World!\");
+            "),
             "Hello World!\n"
         );
     }
@@ -72,10 +72,10 @@ mod visitor {
     fn print_var_and_var() {
         assert_eq!(
             run("
-            var a = \"Hello\";
-            var b = \"World!\";
-            print(a, b);
-        "),
+                var a = \"Hello\";
+                var b = \"World!\";
+                print(a, b);
+            "),
             "Hello World!\n"
         );
     }
